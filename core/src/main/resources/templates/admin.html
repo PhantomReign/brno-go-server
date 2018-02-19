@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <title>Brno Go</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="../static/css/materialize.css" th:href="@{/css/materialize.css}" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="../static/css/style.css" th:href="@{/css/style.css}" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<ul id="dropdownInfo" class="dropdown-content">
+    <li>
+        <form id="form-logout" th:action="@{/logout}" method="post" accept-charset="UTF-8">
+            <a class="dropdown-form-item" onclick="logout()">Log Out</a>
+        </form>
+    </li>
+</ul>
+
+<div id="modalFailed" class="modal" th:if="${param.failed}" onload="loadErrorModal();">
+    <div class="modal-content">
+        <h4 class="red-text">Error!</h4>
+        <p>Unable to upload file.</p>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-action modal-close waves-effect waves-green btn-flat">Ok</button>
+    </div>
+</div>
+
+<div id="modalSuccess" class="modal" th:if="${param.success}" onload="loadErrorModal();">
+    <div class="modal-content">
+        <h4 class="green-text">Success!</h4>
+        <p>Congratulation, you have successfully uploaded file.</p>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-action modal-close waves-effect waves-green btn-flat">Ok</button>
+    </div>
+</div>
+
+<nav>
+    <div class="nav-wrapper">
+        <a th:href="@{/admin}" class="brand-logo">
+            <img class="nav-logo" src="../img/logoNoBackground.png"/>
+            Dashboard
+        </a>
+        <ul class="right hide-on-med-and-down">
+            <!-- Dropdown Trigger -->
+            <li><a class="dropdown-button btn" href="" data-activates="dropdownInfo">ADMIN</a></li>
+            <!-- Dropdown Structure -->
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col s4 offset-s2 m4 offset-m2">
+            <div class="card margin-top">
+                <div class="card-image">
+                    <img src="../img/station.jpg">
+                    <span class="card-title card-img-text">Stations</span>
+                </div>
+                <div class="card-content">
+                    <p class="card-text-primary center">Update station information.</p>
+                    <p class="card-text-secondary center">All previous changes will be removed.</p>
+                </div>
+                <div class="card-action center">
+                    <form id="form-upload-station" th:action="@{/admin/upload/stops}" method="post" enctype="multipart/form-data">
+                        <div class="file-field">
+                            <div class="waves-effect waves-red btn-flat">
+                                <span>Upload</span>
+                                <input type="file" onchange="this.form.submit()" name="file"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col s4 m4">
+            <div class="card margin-top">
+                <div class="card-image">
+                    <img src="../img/service.jpg">
+                    <span class="card-title card-img-text">Services</span>
+                </div>
+                <div class="card-content">
+                    <p class="card-text-primary center">Update service information.</p>
+                    <p class="card-text-secondary center">All previous changes will be removed.</p>
+                </div>
+                <div class="card-action center">
+                    <form id="form-upload-service" th:action="@{/admin/upload/services}" method="post" enctype="multipart/form-data">
+                        <div class="file-field">
+                            <div class="waves-effect waves-red btn-flat">
+                                <span>Upload</span>
+                                <input type="file" onchange="this.form.submit()" name="file"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+<script th:src="@{/js/bin/materialize.js}" src="../static/js/bin/materialize.js"></script>
+<script th:src="@{/js/custom/app_admin.js}" src="../static/js/custom/app_admin.js"></script>
+
+</body>
+</html>

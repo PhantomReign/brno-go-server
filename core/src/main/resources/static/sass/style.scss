@@ -1,0 +1,67 @@
+// colors
+$colorPrimary: #EB5757;
+$colorPrimaryDark: #DE5454;
+$colorAccent: #ff7474;
+$colorDark: #4F4F4F;
+$colorGrey: #828282;
+$colorGreyLight: #EEEEEE;
+
+body {
+  background-color: $colorGreyLight;
+}
+
+.card-logo {
+  width: 140px !important;
+  height: 140px !important;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+}
+
+.margin-top {
+  margin-top: 100px;
+}
+
+.card-img-text {
+  font-weight: 400 !important;
+  width: 100% !important;
+  text-align: center !important;
+  padding: 0 !important;
+}
+
+.card-text-primary {
+  color: $colorDark !important;
+}
+
+.card-text-secondary {
+  color: $colorGrey !important;
+}
+
+.card-action {
+  padding: 8px !important;
+}
+
+.nav-logo {
+  vertical-align: middle;
+  width: 40px;
+}
+
+.brand-logo {
+  padding-left: 20px !important;
+}
+
+.btn {
+  font-weight: 500;
+}
+
+.btn-flat {
+  font-weight: 500;
+}
+
+.dropdown-form-item {
+  font-size: 16px;
+  color: #E57373;
+  display: block;
+  line-height: 22px;
+  padding: 14px 16px;
+}
