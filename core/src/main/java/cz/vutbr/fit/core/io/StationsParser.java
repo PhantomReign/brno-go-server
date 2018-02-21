@@ -1,64 +1,48 @@
 package cz.vutbr.fit.core.io;
 
+import cz.vutbr.fit.core.io.helper.FileHelper;
 import cz.vutbr.fit.core.model.Station;
 import cz.vutbr.fit.core.model.Stop;
 import cz.vutbr.fit.core.tools.Constant;
 import cz.vutbr.fit.core.tools.Location;
 import kotlin.Pair;
 import org.apache.commons.lang.StringUtils;
-import reactor.core.publisher.Flux;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.BaseStream;
 import java.util.stream.Collectors;
 
 public class StationsParser {
 
     /**
-     * Create Flux Stream from file content:
-     **
-     * @param path path to file
-     * @return {@link Flux} stream
-     */
-    private static Flux<String> fromPath(Path path) {
-        return Flux.using(() -> Files.lines(path),
-                Flux::fromStream,
-                BaseStream::close
-        );
-    }
-
-    /**
      * Process file containing information about different stations:
      **
-     * @param path path to file
+     * @param pathToFile path to file
      * @return {@link ArrayList<Station> list of stations
      */
     public static ArrayList<Station> processStationsFile(Path pathToFile) {
 
         // filter unnecessary stations
-        List<String> filteredFile = fromPath(pathToFile)
+        List<String> filteredFile = FileHelper.fromPath(pathToFile)
                 .takeWhile(line -> !line
                         .trim()
                         .startsWith(Constant.Parser.MARK_UNREQUIRED_STATION))
                 .toStream()
                 .collect(Collectors.toList());
 
-        // longitude, latitude
-        //Pair<Double, Double> lastCoordinates = new Pair<>(0.0, 0.0);
+        // first - longitude, second - latitude
         ArrayList<Pair<Double,Double>> coordinatesArray = new ArrayList<>();
         Station station = new Station();
 
-        ArrayList<Station> result = new ArrayList<>();
+        ArrayList<Station> stations = new ArrayList<>();
 
         for (String line : filteredFile) {
             if (!line.trim().startsWith("S")) {
-                Pair<Double, Double> lastCoordinates = Location.getLastCoordinatesSum(coordinatesArray);
-                if (station.hasStops() && lastCoordinates.getFirst() != 0 && lastCoordinates.getSecond() != 0 && !coordinatesArray.isEmpty()) {
-                    station.setLocation(Location.getAvgCoordinates(lastCoordinates.getFirst(), lastCoordinates.getSecond(), coordinatesArray.size()));
-                    result.add(station);
+                Pair<Double, Double> lastCoordinatesSum = Location.getLastCoordinatesSum(coordinatesArray);
+                if (station.hasStops() && lastCoordinatesSum.getFirst() != 0 && lastCoordinatesSum.getSecond() != 0 && !coordinatesArray.isEmpty()) {
+                    station.setLocation(Location.getAvgCoordinates(lastCoordinatesSum.getFirst(), lastCoordinatesSum.getSecond(), coordinatesArray.size()));
+                    stations.add(station);
                 }
 
                 coordinatesArray = new ArrayList<>();
@@ -73,13 +57,14 @@ public class StationsParser {
             }
         }
 
-        Pair<Double, Double> lastCoordinates = Location.getLastCoordinatesSum(coordinatesArray);
-        if (station.hasStops() && lastCoordinates.getFirst() != 0 && lastCoordinates.getSecond() != 0 && !coordinatesArray.isEmpty()) {
-            station.setLocation(Location.getAvgCoordinates(lastCoordinates.getFirst(), lastCoordinates.getSecond(), coordinatesArray.size()));
-            result.add(station);
+        // Add last stops to station
+        Pair<Double, Double> lastCoordinatesSum = Location.getLastCoordinatesSum(coordinatesArray);
+        if (station.hasStops() && lastCoordinatesSum.getFirst() != 0 && lastCoordinatesSum.getSecond() != 0 && !coordinatesArray.isEmpty()) {
+            station.setLocation(Location.getAvgCoordinates(lastCoordinatesSum.getFirst(), lastCoordinatesSum.getSecond(), coordinatesArray.size()));
+            stations.add(station);
         }
 
-        return result;
+        return stations;
     }
 
     /**
@@ -95,9 +80,14 @@ public class StationsParser {
 
         try {
             String[] values = line.split("\\s+");
+
+            // Set Id
             station.setId(Integer.parseInt(values[0]));
+
+            // Set Zone
             station.setZone(Integer.parseInt(values[1]));
 
+            // Set Name
             station.setName(StringUtils.substringBetween(line,"'","'"));
         } catch (Exception e) {
             throw new IllegalArgumentException("Station line: " + line + " has illegal format.");

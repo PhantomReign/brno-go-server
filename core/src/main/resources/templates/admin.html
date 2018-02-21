@@ -30,7 +30,7 @@
     </li>
 </ul>
 
-<div id="modalFailed" class="modal" th:if="${param.failed}" onload="loadErrorModal();">
+<div id="modalFileFailed" class="modal" th:if="${param.filefailure}" onload="loadFileErrorModal();">
     <div class="modal-content">
         <h4 class="red-text">Error!</h4>
         <p>Unable to upload file.</p>
@@ -40,10 +40,30 @@
     </div>
 </div>
 
-<div id="modalSuccess" class="modal" th:if="${param.success}" onload="loadErrorModal();">
+<div id="modalFileSuccess" class="modal" th:if="${param.filesuccess}" onload="loadFileSuccessModal();">
     <div class="modal-content">
         <h4 class="green-text">Success!</h4>
         <p>Congratulation, you have successfully uploaded file.</p>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-action modal-close waves-effect waves-green btn-flat">Ok</button>
+    </div>
+</div>
+
+<div id="modalRepoFailed" class="modal" th:if="${param.repofailure}" onload="loadRepoFailedModal();">
+    <div class="modal-content">
+        <h4 class="red-text">Error!</h4>
+        <p>Unable to update / delete database content.</p>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-action modal-close waves-effect waves-green btn-flat">Ok</button>
+    </div>
+</div>
+
+<div id="modalRepoSuccess" class="modal" th:if="${param.reposuccess}" onload="loadRepoSuccessModal();">
+    <div class="modal-content">
+        <h4 class="green-text">Success!</h4>
+        <p>Congratulation, you have successfully updated / deleted database content.</p>
     </div>
     <div class="modal-footer">
         <button class="modal-action modal-close waves-effect waves-green btn-flat">Ok</button>
@@ -65,16 +85,41 @@
 </nav>
 
 <div class="container">
+
     <div class="row">
-        <div class="col s4 offset-s2 m4 offset-m2">
+        <div class="col s6 offset-s3 m6 offset-m3">
             <div class="card margin-top">
+                <div class="card-content">
+                    <p class="card-text-primary center">Update or Delete information in database.</p>
+                    <p class="card-text-secondary center">Make sure all files have been uploaded. Previous information will be lost.</p>
+                </div>
+                <div class="card-action center">
+                    <form class="inline-form" id="form-update" th:action="@{/admin/repo/update}" method="post">
+                        <div class="file-field">
+                            <button class="waves-effect waves-red btn-flat" type="submit" name="update">Update</button>
+                        </div>
+                    </form>
+
+                    <form class="inline-form" id="form-delete" th:action="@{/admin/repo/delete}" method="post">
+                        <div class="file-field">
+                            <button class="waves-effect waves-red btn-flat" type="submit" name="delete">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s4 m4">
+            <div class="card">
                 <div class="card-image">
                     <img src="../img/station.jpg">
                     <span class="card-title card-img-text">Stations</span>
                 </div>
                 <div class="card-content">
-                    <p class="card-text-primary center">Update station information.</p>
-                    <p class="card-text-secondary center">All previous changes will be removed.</p>
+                    <p class="card-text-primary center">Upload station information.</p>
+                    <p class="card-text-secondary center">Original file name is <i>Zastavky.txt</i>.</p>
                 </div>
                 <div class="card-action center">
                     <form id="form-upload-station" th:action="@{/admin/upload/stops}" method="post" enctype="multipart/form-data">
@@ -89,17 +134,40 @@
             </div>
         </div>
         <div class="col s4 m4">
-            <div class="card margin-top">
+            <div class="card ">
                 <div class="card-image">
                     <img src="../img/service.jpg">
                     <span class="card-title card-img-text">Services</span>
                 </div>
                 <div class="card-content">
-                    <p class="card-text-primary center">Update service information.</p>
-                    <p class="card-text-secondary center">All previous changes will be removed.</p>
+                    <p class="card-text-primary center">Upload service information.</p>
+                    <p class="card-text-secondary center">Original file name is <i>DPMB.txt</i>.</p>
                 </div>
                 <div class="card-action center">
                     <form id="form-upload-service" th:action="@{/admin/upload/services}" method="post" enctype="multipart/form-data">
+                        <div class="file-field">
+                            <div class="waves-effect waves-red btn-flat">
+                                <span>Upload</span>
+                                <input type="file" onchange="this.form.submit()" name="file"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s4 m4">
+            <div class="card ">
+                <div class="card-image">
+                    <img src="../img/schedule.jpg">
+                    <span class="card-title card-img-text">Schedule</span>
+                </div>
+                <div class="card-content">
+                    <p class="card-text-primary center">Upload schedule information.</p>
+                    <p class="card-text-secondary center">Original file name is <i>Navaznosti.txt</i>.</p>
+                </div>
+                <div class="card-action center">
+                    <form id="form-upload-schedule" th:action="@{/admin/upload/schedules}" method="post" enctype="multipart/form-data">
                         <div class="file-field">
                             <div class="waves-effect waves-red btn-flat">
                                 <span>Upload</span>

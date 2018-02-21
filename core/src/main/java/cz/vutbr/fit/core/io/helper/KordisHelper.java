@@ -12,7 +12,6 @@ public class KordisHelper {
     }
 
     public static void deleteStationsInDatabase(StationRepository stationRepository) {
-        if (stationRepository == null) System.out.println("KURVAAAA");
         stationRepository.deleteAll().subscribe();
     }
 }

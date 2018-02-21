@@ -1,8 +1,10 @@
 $(document).ready(function(){
     // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
-    loadFailedModal();
-    loadSuccessModal();
+    loadFileFailedModal();
+    loadFileSuccessModal();
+    loadRepoFailedModal();
+    loadRepoSuccessModal();
 
     $('.dropdown-button').dropdown({
             inDuration: 300,
@@ -13,12 +15,20 @@ $(document).ready(function(){
     );
 });
 
-function loadFailedModal() {
-    $('#modalFailed').modal('open');
+function loadRepoFailedModal() {
+    $('#modalRepoFailed').modal('open');
 }
 
-function loadSuccessModal() {
-    $('#modalSuccess').modal('open');
+function loadRepoSuccessModal() {
+    $('#modalRepoSuccess').modal('open');
+}
+
+function loadFileFailedModal() {
+    $('#modalFileFailed').modal('open');
+}
+
+function loadFileSuccessModal() {
+    $('#modalFileSuccess').modal('open');
 }
 
 function logout() {

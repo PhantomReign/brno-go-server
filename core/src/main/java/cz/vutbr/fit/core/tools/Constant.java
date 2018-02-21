@@ -21,6 +21,7 @@ public interface Constant {
     interface Upload {
         String PATH_STOPS = "upload/stops.txt";
         String PATH_SERVICES = "upload/services.txt";
+        String PATH_SCHEDULE = "upload/schedule.txt";
     }
 
     interface Parser {
