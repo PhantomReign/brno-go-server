@@ -3,6 +3,7 @@ $(document).ready(function(){
     $('.modal').modal();
     loadFileFailedModal();
     loadFileSuccessModal();
+    loadFileIncorrectModal();
     loadRepoFailedModal();
     loadRepoSuccessModal();
 
@@ -25,6 +26,10 @@ function loadRepoSuccessModal() {
 
 function loadFileFailedModal() {
     $('#modalFileFailed').modal('open');
+}
+
+function loadFileIncorrectModal() {
+    $('#modalFileIncorrect').modal('open');
 }
 
 function loadFileSuccessModal() {

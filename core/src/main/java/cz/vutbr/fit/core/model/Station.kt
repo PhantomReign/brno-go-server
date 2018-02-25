@@ -9,9 +9,9 @@ import java.util.ArrayList
 @Document
 data class Station(
         @Id
-        var id: Int = 0,
+        var id: Int = -1,
         var name: String = "",
-        var zone: Int = 0,
+        var zone: Int = -1,
         @JsonIgnore
         var location: GeoJsonPoint? = GeoJsonPoint(0.0,0.0),
         @JsonIgnore

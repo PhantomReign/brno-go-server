@@ -19,7 +19,7 @@ public class StationsParser {
      * Process file containing information about different stations:
      **
      * @param pathToFile path to file
-     * @return {@link ArrayList<Station> list of stations
+     * @return {@link ArrayList<Station>} list of stations
      */
     public static ArrayList<Station> processStationsFile(Path pathToFile) {
 
@@ -27,7 +27,7 @@ public class StationsParser {
         List<String> filteredFile = FileHelper.fromPath(pathToFile)
                 .takeWhile(line -> !line
                         .trim()
-                        .startsWith(Constant.Parser.MARK_UNREQUIRED_STATION))
+                        .startsWith(Constant.Parser.MARK_STATION_EXPENDABLE))
                 .toStream()
                 .collect(Collectors.toList());
 
@@ -38,7 +38,7 @@ public class StationsParser {
         ArrayList<Station> stations = new ArrayList<>();
 
         for (String line : filteredFile) {
-            if (!line.trim().startsWith("S")) {
+            if (!line.trim().startsWith(Constant.Parser.MARK_STATION_STOP)) {
                 Pair<Double, Double> lastCoordinatesSum = Location.getLastCoordinatesSum(coordinatesArray);
                 if (station.hasStops() && lastCoordinatesSum.getFirst() != 0 && lastCoordinatesSum.getSecond() != 0 && !coordinatesArray.isEmpty()) {
                     station.setLocation(Location.getAvgCoordinates(lastCoordinatesSum.getFirst(), lastCoordinatesSum.getSecond(), coordinatesArray.size()));

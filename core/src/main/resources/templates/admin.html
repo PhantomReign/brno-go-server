@@ -50,6 +50,16 @@
     </div>
 </div>
 
+<div id="modalFileIncorrect" class="modal" th:if="${param.fileincorrect}" onload="loadFileIncorrectModal();">
+    <div class="modal-content">
+        <h4 class="green-text">Error!</h4>
+        <p>Incorrect filename extension. You have to upload a TXT file.</p>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-action modal-close waves-effect waves-green btn-flat">Ok</button>
+    </div>
+</div>
+
 <div id="modalRepoFailed" class="modal" th:if="${param.repofailure}" onload="loadRepoFailedModal();">
     <div class="modal-content">
         <h4 class="red-text">Error!</h4>
@@ -118,8 +128,8 @@
                     <span class="card-title card-img-text">Stations</span>
                 </div>
                 <div class="card-content">
-                    <p class="card-text-primary center">Upload station information.</p>
-                    <p class="card-text-secondary center">Original file name is <i>Zastavky.txt</i>.</p>
+                    <p class="card-text-primary center">Upload Station Information.</p>
+                    <p class="card-text-secondary center">Probable filename - Zastavky.txt.</p>
                 </div>
                 <div class="card-action center">
                     <form id="form-upload-station" th:action="@{/admin/upload/stops}" method="post" enctype="multipart/form-data">
@@ -140,8 +150,8 @@
                     <span class="card-title card-img-text">Services</span>
                 </div>
                 <div class="card-content">
-                    <p class="card-text-primary center">Upload service information.</p>
-                    <p class="card-text-secondary center">Original file name is <i>DPMB.txt</i>.</p>
+                    <p class="card-text-primary center">Upload Service Information.</p>
+                    <p class="card-text-secondary center">Probable filename - DPMB.txt.</p>
                 </div>
                 <div class="card-action center">
                     <form id="form-upload-service" th:action="@{/admin/upload/services}" method="post" enctype="multipart/form-data">
@@ -160,18 +170,18 @@
             <div class="card ">
                 <div class="card-image">
                     <img src="../img/schedule.jpg">
-                    <span class="card-title card-img-text">Schedule</span>
+                    <span class="card-title card-img-text">Days</span>
                 </div>
                 <div class="card-content">
-                    <p class="card-text-primary center">Upload schedule information.</p>
-                    <p class="card-text-secondary center">Original file name is <i>Navaznosti.txt</i>.</p>
+                    <p class="card-text-primary center">Upload Day Information.</p>
+                    <p class="card-text-secondary center">Joined PDDMMYYYY.txt files.</p>
                 </div>
                 <div class="card-action center">
                     <form id="form-upload-schedule" th:action="@{/admin/upload/schedules}" method="post" enctype="multipart/form-data">
                         <div class="file-field">
                             <div class="waves-effect waves-red btn-flat">
                                 <span>Upload</span>
-                                <input type="file" onchange="this.form.submit()" name="file"/>
+                                <input type="file" onchange="this.form.submit()" name="file[]" multiple/>
                             </div>
                         </div>
                     </form>
