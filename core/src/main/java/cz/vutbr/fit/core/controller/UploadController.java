@@ -41,7 +41,7 @@ public class UploadController {
     }
 
 
-    @PostMapping(value = "/schedules", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/days", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String uploadScheduleFile(@RequestPart("file") FilePart part) {
         if (!part.headers().getContentType().includes(MediaType.TEXT_PLAIN)) {
             return "redirect:/admin?fileincorrect";

@@ -17,75 +17,9 @@ public class ServicesParser {
      * @param pathToFile path to file
      * @return {@link Map} map of services
      */
-    public static Map<Integer, List<Service>> processServiceFile(Path pathToFile) {
-
-        // filter stations - discard unavailable
-        List<String> filteredFile = FileHelper.fromPath(pathToFile)
-                .filter(line -> {
-                    String[] values = line.trim().split("\\s+");
-                    return (line.trim().startsWith(Constant.Parser.MARK_SERVICE_STOP)
-                            && !values[1].startsWith(Constant.Parser.MARK_STATION_EXPENDABLE)
-                            && values[5].equals(Constant.Parser.MARK_SERVICE_AVAILABLE_STOP))
-                            || line.trim().startsWith(Constant.Parser.MARK_SERVICE_CODE)
-                            || (line.trim().startsWith(Constant.Parser.MARK_SERVICE_LINE)
-                            && Integer.parseInt(values[2]) != Constant.Parser.MARK_SERVICE_LINE_INVALID);
-                })
-                .toStream()
-                .collect(Collectors.toList());
-
-        HashMap<Integer, List<Service>> services = new HashMap<>();
-        List<Service> processedLineList = null;
-        int lineId = 0;
-        int lineCode = 0;
-        int serviceCode = 0;
-
-        for (String line : filteredFile) {
-            String[] values = line.split("\\s+");
-
-            if (!line.trim().startsWith(Constant.Parser.MARK_SERVICE_CODE)) {
-
-                // Update service with new info - must be done before processing new service
-                if (processedLineList != null && !processedLineList.isEmpty()) {
-                    List<Service> lineList = services.getOrDefault(serviceCode, new ArrayList<>());
-                    lineList.addAll(processedLineList);
-                    services.put(serviceCode, lineList);
-                }
-
-                processedLineList = new ArrayList<>();
-                serviceCode = Integer.parseInt(values[0].substring(1));
-            } else if (!line.trim().startsWith(Constant.Parser.MARK_SERVICE_LINE)) {
-
-                // Update service with new info - must be done before processing new service line
-                if (processedLineList != null && !processedLineList.isEmpty()) {
-                    List<Service> lineList = services.getOrDefault(serviceCode, new ArrayList<>());
-                    lineList.addAll(processedLineList);
-                    services.put(serviceCode, lineList);
-                }                processedLineList = new ArrayList<>();
-
-                lineId = Integer.parseInt(values[0].substring(1));
-                lineCode = Integer.parseInt(values[2]);
-            } else {
-                Service currentService = processServiceStopLine(values, serviceCode, lineId, lineCode);
-
-                if (currentService != null) {
-                    Service nextService;
-                    String nextLine = nextLine(filteredFile, line);
-                    // If its possible try to create next one
-                    if (!nextLine.isEmpty()) {
-                        if (nextLine.trim().startsWith(Constant.Parser.MARK_SERVICE_STOP)) {
-                            String[] nextValues = nextLine.split("\\s+");
-                            nextService = processServiceStopLine(nextValues, serviceCode, lineId, lineCode);
-
-                            currentService.setTimeToNextStop(nextService.getDepartureTime() - currentService.getDepartureTime());
-                            currentService.setDestinationStationId(nextService.getStartStationId());
-                            currentService.setDestinationStopId(nextService.getStartStopId());
-                        }
-                    }
-                    processedLineList.add(currentService);
-                }
-            }
-        }
-        return services;
+    public static ArrayList<Service> processServiceFile(Path pathToFile, Map<Integer, ArrayList<Long>> servicesInDays) {
+        Map<Integer, ArrayList<Service>> services = getMappedServices(pathToFile);
+        return updatedServices(services, servicesInDays);
     }
 
 
@@ -99,7 +33,7 @@ public class ServicesParser {
      * @param lineId id of line.
      * @return {@link Service} instance.
      */
-    private static Service processServiceStopLine(String[] lineValues, int serviceCode, int lineId, int lineCode) throws IllegalArgumentException {
+    private static Service processServiceStopLine(String[] lineValues, int serviceCode, int lineId, int lineCode) {
         Service service = new Service();
 
         try {
@@ -119,12 +53,127 @@ public class ServicesParser {
     /**
      * Find next line in file:
      *
-     * @param list all lines in file
-     * @return {@link String} nextLine
+     * @param fileLines all lines in file
+     * @param index line position
+     * @return {@link String} next line
      */
-    private static String nextLine(List<String> list, String line){
-        int nextIndex = list.indexOf(line) + 1;
-        return list.size() < nextIndex ? "" : list.get(nextIndex);
+    private static String nextLine(List<String> fileLines, int index){
+        return fileLines.size() > index + 1 ? fileLines.get(index + 1) : "";
+    }
+
+    /**
+     * This function updates time information in services:
+     *
+     * @param services mapped services
+     * @param servicesInDays mapped services available in days
+     * @return {@link ArrayList} list of services with updated dates
+     */
+    private static ArrayList<Service> updatedServices(Map<Integer, ArrayList<Service>> services,
+                                                    Map<Integer, ArrayList<Long>> servicesInDays) {
+
+        ArrayList<Service> updatedServiceList = new ArrayList<>();
+
+        servicesInDays.forEach((serviceCode, daysList) -> {
+            ArrayList<Service> processedServiceList = new ArrayList<>();
+            ArrayList<Service> serviceList = services.get(serviceCode);
+
+            if (serviceList != null) {
+                for (Service service : serviceList) {
+                    for (Long date : daysList) {
+                        Service updatedService = new Service(service);
+
+                        if (updatedService.getDepartureTime() != Constant.Parser.INVALID_NUM) {
+                            updatedService.setDepartureTime(updatedService.getDepartureTime() + date);
+                        }
+                        processedServiceList.add(updatedService);
+                    }
+                }
+                updatedServiceList.addAll(processedServiceList);
+            }
+        });
+
+        return updatedServiceList;
+    }
+
+
+    /**
+     * This function filter services and map available ones:
+     *
+     * @param pathToFile path to file
+     * @return {@link Map} mapped services
+     */
+    private static Map<Integer, ArrayList<Service>> getMappedServices(Path pathToFile) {
+
+        // filter stations - discard unavailable
+        List<String> filteredFile = FileHelper.fromPath(pathToFile)
+                .filter(line -> {
+                    String[] values = line.trim().split("\\s+");
+                    return (line.trim().startsWith(Constant.Parser.MARK_SERVICE_STOP)
+                            && !values[1].startsWith(Constant.Parser.MARK_STATION_EXPENDABLE)
+                            && values[5].equals(Constant.Parser.MARK_SERVICE_AVAILABLE_STOP))
+                            || line.trim().startsWith(Constant.Parser.MARK_SERVICE_CODE)
+                            || (line.trim().startsWith(Constant.Parser.MARK_SERVICE_LINE)
+                            && Integer.parseInt(values[2]) != Constant.Parser.MARK_SERVICE_LINE_INVALID);
+                })
+                .toStream()
+                .collect(Collectors.toList());
+
+        HashMap<Integer, ArrayList<Service>> services = new HashMap<>();
+        List<Service> processedServiceList = null;
+        int lineId = 0;
+        int lineCode = 0;
+        int serviceCode = 0;
+
+        int index = 0;
+
+        for (String line : filteredFile) {
+            String[] values = line.trim().split("\\s+");
+
+            if (line.trim().startsWith(Constant.Parser.MARK_SERVICE_CODE) ||
+                    line.trim().startsWith(Constant.Parser.MARK_SERVICE_LINE)) {
+
+                // Update service with new info - must be done before processing new service
+                if (processedServiceList != null && !processedServiceList.isEmpty()) {
+                    ArrayList<Service> serviceList = services.getOrDefault(serviceCode, new ArrayList<>());
+                    serviceList.addAll(processedServiceList);
+                    services.put(serviceCode, serviceList);
+                }
+
+                processedServiceList = new ArrayList<>();
+
+                if (line.trim().startsWith(Constant.Parser.MARK_SERVICE_CODE)) {
+                    serviceCode = Integer.parseInt(values[0].substring(1));
+                } else {
+                    lineId = Integer.parseInt(values[0].substring(1));
+                    lineCode = Integer.parseInt(values[2]);
+                }
+
+            } else {
+                Service currentService = processServiceStopLine(values, serviceCode, lineId, lineCode);
+
+                if (currentService != null) {
+                    String nextLine = nextLine(filteredFile, index);
+
+                    // If its possible try to create next one
+                    if (!nextLine.isEmpty()) {
+                        if (nextLine.trim().startsWith(Constant.Parser.MARK_SERVICE_STOP)) {
+                            String[] nextValues = nextLine.trim().split("\\s+");
+                            Service nextService = processServiceStopLine(nextValues, serviceCode, lineId, lineCode);
+
+                            currentService.setTimeToNextStop(nextService.getDepartureTime() - currentService.getDepartureTime());
+                            currentService.setDestinationStationId(nextService.getStartStationId());
+                            currentService.setDestinationStopId(nextService.getStartStopId());
+                        }
+                    } else {
+                        continue;
+                    }
+                    processedServiceList.add(currentService);
+                }
+            }
+            index++;
+        }
+
+        return services;
     }
 
 }

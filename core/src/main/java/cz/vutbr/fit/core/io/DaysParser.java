@@ -26,14 +26,13 @@ public class DaysParser {
                 .collect(Collectors.toList());
 
         long currentDayInSeconds = Constant.Parser.INVALID_NUM;
-        int serviceCode = Constant.Parser.INVALID_NUM;
 
         for (String line : fileContent) {
             try {
                 if (line.trim().startsWith(Constant.Parser.MARK_SCHEDULE_DATE)) {
                     currentDayInSeconds = DateTime.zonedTimeToEpochSec(line, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 } else {
-                    serviceCode = Integer.parseInt(line.trim());
+                    int serviceCode = Integer.parseInt(line.trim());
                     ArrayList<Long> availableInDaysList = mappedSchedule.getOrDefault(serviceCode, new ArrayList<>());
                     if (currentDayInSeconds != Constant.Parser.INVALID_NUM) {
                         availableInDaysList.add(currentDayInSeconds);

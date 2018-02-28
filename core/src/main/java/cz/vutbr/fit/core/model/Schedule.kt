@@ -5,7 +5,26 @@ import java.util.*
 
 @Document
 data class Schedule(
-        var stationId: Int = -1,
-        var stopId: Int = -1,
-        var row: ArrayList<ScheduleRow> = ArrayList(),
-        var nextStop: ArrayList<ScheduleNextStop> = ArrayList())
+        var startStationId: Int = -1,
+        var startStopId: Int = -1,
+        var rows: ArrayList<ScheduleRow> = ArrayList(),
+        var nextStops: ArrayList<ScheduleNextStop> = ArrayList()) {
+
+    fun hasRows(): Boolean {
+        return !rows.isEmpty()
+    }
+
+    fun addRow(row: ScheduleRow) {
+        rows.add(row)
+    }
+
+    fun hasNextStops(): Boolean {
+        return !nextStops.isEmpty()
+    }
+
+    fun addDifferentNextStop(stop: ScheduleNextStop) {
+        if (!nextStops.contains(stop)) {
+            nextStops.add(stop)
+        }
+    }
+}

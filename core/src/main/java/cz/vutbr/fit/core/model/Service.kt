@@ -9,4 +9,17 @@ data class Service(
         var lineId: Int = -1,
         var lineCode: Int = -1,
         var departureTime: Long = -1,
-        var timeToNextStop: Long = -1)
+        var timeToNextStop: Long = -1) {
+
+    constructor(service: Service) : this() {
+        this.code = service.code
+        this.startStationId = service.startStationId
+        this.destinationStationId = service.destinationStationId
+        this.startStopId = service.startStopId
+        this.destinationStopId = service.destinationStopId
+        this.lineId = service.lineId
+        this.lineCode = service.lineCode
+        this.departureTime = service.departureTime
+        this.timeToNextStop = service.timeToNextStop
+    }
+}

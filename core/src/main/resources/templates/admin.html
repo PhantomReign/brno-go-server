@@ -169,7 +169,7 @@
         <div class="col s4 m4">
             <div class="card ">
                 <div class="card-image">
-                    <img src="../img/schedule.jpg">
+                    <img src="../img/day.jpg">
                     <span class="card-title card-img-text">Days</span>
                 </div>
                 <div class="card-content">
@@ -177,11 +177,11 @@
                     <p class="card-text-secondary center">Joined PDDMMYYYY.txt files.</p>
                 </div>
                 <div class="card-action center">
-                    <form id="form-upload-schedule" th:action="@{/admin/upload/schedules}" method="post" enctype="multipart/form-data">
+                    <form id="form-upload-schedule" th:action="@{/admin/upload/days}" method="post" enctype="multipart/form-data">
                         <div class="file-field">
                             <div class="waves-effect waves-red btn-flat">
                                 <span>Upload</span>
-                                <input type="file" onchange="this.form.submit()" name="file[]" multiple/>
+                                <input type="file" onchange="this.form.submit()" name="file"/>
                             </div>
                         </div>
                     </form>
