@@ -1,4 +1,4 @@
-package cz.vutbr.fit.core.model
+package cz.vutbr.fit.core.model.wrapper
 
 data class ScheduleRow(
         var destinationStationId: Int = -1,

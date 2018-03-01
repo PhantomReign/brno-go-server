@@ -1,6 +1,7 @@
 package cz.vutbr.fit.core.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import cz.vutbr.fit.core.model.wrapper.Stop
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.mongodb.core.mapping.Document

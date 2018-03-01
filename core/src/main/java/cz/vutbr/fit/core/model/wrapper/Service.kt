@@ -1,4 +1,4 @@
-package cz.vutbr.fit.core.model
+package cz.vutbr.fit.core.model.wrapper
 
 data class Service(
         var code: Int = -1,

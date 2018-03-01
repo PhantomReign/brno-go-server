@@ -7,6 +7,7 @@ import cz.vutbr.fit.core.io.ServicesParser;
 import cz.vutbr.fit.core.io.StationsParser;
 import cz.vutbr.fit.core.io.helper.FileHelper;
 import cz.vutbr.fit.core.model.*;
+import cz.vutbr.fit.core.model.wrapper.Service;
 import cz.vutbr.fit.core.repository.ScheduleRepository;
 import cz.vutbr.fit.core.repository.StationRepository;
 import cz.vutbr.fit.core.tools.Constant;
@@ -60,7 +61,5 @@ public class RepositoryController extends AbstractRepositoryController {
         deleteStationsInDatabase(stationRepository);
         return "redirect:/admin?reposuccess";
     }
-
-
 
 }

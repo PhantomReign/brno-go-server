@@ -2,10 +2,11 @@ package cz.vutbr.fit.live.model
 
 data class Vehicle(
         val id: Int,
+        val carNum: Int,
         val lineId: Int,
         val lastPlatformId: Int,
         val isBarrierLess: Boolean,
-        val latitude: Float,
         val longitude: Float,
-        val delay: Int) {
+        val latitude: Float,
+        val delay: Short) {
 }

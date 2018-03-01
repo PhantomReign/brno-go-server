@@ -1,5 +1,7 @@
 package cz.vutbr.fit.core.model
 
+import cz.vutbr.fit.core.model.wrapper.ScheduleNextStop
+import cz.vutbr.fit.core.model.wrapper.ScheduleRow
 import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
 

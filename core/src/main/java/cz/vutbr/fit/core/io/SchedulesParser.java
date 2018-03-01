@@ -1,9 +1,9 @@
 package cz.vutbr.fit.core.io;
 
 import cz.vutbr.fit.core.model.Schedule;
-import cz.vutbr.fit.core.model.ScheduleNextStop;
-import cz.vutbr.fit.core.model.ScheduleRow;
-import cz.vutbr.fit.core.model.Service;
+import cz.vutbr.fit.core.model.wrapper.ScheduleNextStop;
+import cz.vutbr.fit.core.model.wrapper.ScheduleRow;
+import cz.vutbr.fit.core.model.wrapper.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;

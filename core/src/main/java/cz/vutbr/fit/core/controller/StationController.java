@@ -19,7 +19,7 @@ public class StationController {
     }
 
     @RequestMapping("/stations")
-    public Flux<Station> getAll() {
+    public Flux<Station> getAllStations() {
         return stationRepository.findAll();
     }
 }

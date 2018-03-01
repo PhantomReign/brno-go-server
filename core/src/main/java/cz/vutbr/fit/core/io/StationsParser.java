@@ -2,7 +2,7 @@ package cz.vutbr.fit.core.io;
 
 import cz.vutbr.fit.core.io.helper.FileHelper;
 import cz.vutbr.fit.core.model.Station;
-import cz.vutbr.fit.core.model.Stop;
+import cz.vutbr.fit.core.model.wrapper.Stop;
 import cz.vutbr.fit.core.tools.Constant;
 import cz.vutbr.fit.core.tools.Location;
 import kotlin.Pair;
