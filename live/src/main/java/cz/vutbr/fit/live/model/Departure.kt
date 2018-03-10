@@ -7,4 +7,13 @@ data class Departure(
         val finalPlatformName: String,
         val isBarrierLess: Boolean,
         val timeMark: String) {
+
+    fun getFormattedTimeMark(): String {
+        val numberOfDigits = timeMark.length
+        return if (numberOfDigits > 2) {
+            timeMark.substring(0, 2) + ":" + timeMark.substring(2, 4)
+        } else {
+            timeMark + " min"
+        }
+    }
 }

@@ -39,4 +39,8 @@ public interface Constant {
         String MARK_SERVICE_AVAILABLE_STOP = "A";
     }
 
+    interface DepartureTime {
+        int TIME_CORRECTION = 3000;
+    }
+
 }

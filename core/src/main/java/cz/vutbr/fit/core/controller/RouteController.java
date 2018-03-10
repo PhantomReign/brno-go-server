@@ -15,12 +15,12 @@ import java.util.List;
 @RequestMapping("/brnogo/api")
 public class RouteController {
 
-    final DepartureService departureServiceIf;
+    final DepartureService departureService;
     final VehicleService vehicleService;
 
     @Autowired
-    public RouteController(DepartureService departureServiceIf, VehicleService vehicleService) {
-        this.departureServiceIf = departureServiceIf;
+    public RouteController(DepartureService departureService, VehicleService vehicleService) {
+        this.departureService = departureService;
         this.vehicleService = vehicleService;
     }
 
@@ -41,15 +41,15 @@ public class RouteController {
 
         ArrayList<Route> routes = new ArrayList<>();
 
-        List<Departure> departureList = departureServiceIf.getDepartures(1104);
-        System.out.println(departureList.toString());
+        List<Departure> departureList = departureService.getDepartures(1567);
 
-        System.out.println("AGAIN");
+        for (Departure departure: departureList) {
+            System.out.println(departure.getLineName() + " "
+                    + departure.getPlatformId() + "/" + departure.getStopId()
+                    + " ----> " + departure.getFinalPlatformName());
 
-        List<Departure> departureList2 = departureServiceIf.getDepartures(1104);
-        System.out.println(departureList2.toString());
+        }
 
-        System.out.println(departureList2.equals(departureList));
 
 
         return routes;

@@ -12,13 +12,6 @@ open class DepartureServiceImpl : DepartureService {
 
     @Cacheable(unless = "#result == null")
     override fun getDepartures(stationId: Int): List<Departure> {
-        println("MISS")
-
-        try {
-            Thread.sleep(2000)
-        } catch (e: InterruptedException) {
-        }
-
 
         val departures = ArrayList<Departure>()
 
@@ -26,10 +19,19 @@ open class DepartureServiceImpl : DepartureService {
         val acrossPosts = service.basicHttpBindingINearDeparturesService.getNearDeparturesAcrossPosts(stationId)
 
         acrossPosts.departuresL.value.nearDeparturesWithPostsRespEntry.mapTo(departures) {
-            Departure(stationId, it.postID, it.lineName.value, it.finalStation.value, it.isIsBarrierLess, it.timeMark.value)
+            Departure(stationId, it.postID, it.lineName.value, it.finalStation.value, it.isIsBarrierLess, getNumberTimeMark(it.timeMark.value))
         }
 
         return departures
+    }
+
+    private fun getNumberTimeMark(timeMark: String): String {
+        val number = timeMark.replace("[\\D]".toRegex(), "")
+        return if (number.isNotBlank()) {
+            number
+        } else {
+            "0"
+        }
     }
 
 }
