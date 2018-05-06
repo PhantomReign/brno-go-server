@@ -1,7 +1,7 @@
 package cz.vutbr.fit.live.model
 
 data class Vehicle(
-        val id: Int,
+        val routeId: Int,
         val carNum: Int,
         val lineId: Int,
         val lastPlatformId: Int,

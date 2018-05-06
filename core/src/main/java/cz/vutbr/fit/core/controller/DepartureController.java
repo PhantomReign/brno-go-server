@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,19 +37,20 @@ public class DepartureController {
      * @return {@link ArrayList<CurrentDeparture>} list of current departures from station
      */
     @RequestMapping("/departures")
-    public ArrayList<CurrentDeparture> getCorrespondingDepartures(@RequestParam("sId") int stationId) {
+    public Mono<ArrayList<CurrentDeparture>> getCorrespondingDepartures(@RequestParam("sId") int stationId) {
 
-        Station station= stationRepository.findById(stationId).block();
-        if (station.hasStops()) {
-            List<Stop> stops = station.getStops();
-            Map<Integer, String> mappedStopsDirection = stops
-                    .stream()
-                    .collect(Collectors.toMap(Stop::getId, Stop::getDirectionFromDescription));
-            List<Departure> departureList = getSortedDepartures(stationId);
-            return getCurrentDepartures(stationId, mappedStopsDirection, departureList);
-        } else {
-            return new ArrayList<>();
-        }
+        return stationRepository.findById(stationId).map(foundStation -> {
+            if (foundStation.hasStops()) {
+                List<Stop> stops = foundStation.getStops();
+                Map<Integer, String> mappedStopsDirection = stops
+                        .stream()
+                        .collect(Collectors.toMap(Stop::getId, Stop::getDirectionFromDescription));
+                List<Departure> departureList = getSortedDepartures(stationId);
+                return getCurrentDepartures(stationId, mappedStopsDirection, departureList);
+            } else {
+                return new ArrayList<>();
+            }
+        });
     }
 
     /**

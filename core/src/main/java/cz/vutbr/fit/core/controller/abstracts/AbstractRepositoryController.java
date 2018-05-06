@@ -19,6 +19,7 @@ public abstract class AbstractRepositoryController {
     }
 
     protected void saveSchedulesToDatabase(ScheduleRepository scheduleRepository, Collection<Schedule> schedules) {
+        scheduleRepository.deleteAll().block();
         scheduleRepository.saveAll(schedules).subscribe();
     }
 

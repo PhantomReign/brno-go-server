@@ -17,7 +17,6 @@ open class DepartureServiceImpl : DepartureService {
 
         val service = KordisHelper.getService()
         val acrossPosts = service.basicHttpBindingINearDeparturesService.getNearDeparturesAcrossPosts(stationId)
-
         acrossPosts.departuresL.value.nearDeparturesWithPostsRespEntry.mapTo(departures) {
             Departure(stationId, it.postID, it.lineName.value, it.finalStation.value, it.isIsBarrierLess, getNumberTimeMark(it.timeMark.value))
         }

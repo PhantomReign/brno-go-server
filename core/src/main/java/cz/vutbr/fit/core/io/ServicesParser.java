@@ -160,14 +160,20 @@ public class ServicesParser {
                             String[] nextValues = nextLine.trim().split("\\s+");
                             Service nextService = processServiceStopLine(nextValues, serviceCode, lineId, lineCode);
 
-                            currentService.setTimeToNextStop(nextService.getDepartureTime() - currentService.getDepartureTime());
+                            // Vehicle can't move to next stop in instant.
+                            long timeInSeconds = (nextService.getDepartureTime() - currentService.getDepartureTime() == 0) ?
+                                    30 : nextService.getDepartureTime() - currentService.getDepartureTime();
+                            currentService.setTimeToNextStop(timeInSeconds);
                             currentService.setDestinationStationId(nextService.getStartStationId());
                             currentService.setDestinationStopId(nextService.getStartStopId());
                         }
                     } else {
                         continue;
                     }
-                    processedServiceList.add(currentService);
+
+                    if (currentService.getDestinationStationId() != -1) {
+                        processedServiceList.add(currentService);
+                    }
                 }
             }
             index++;

@@ -1,6 +1,6 @@
 package cz.vutbr.fit.core.model
 
-import cz.vutbr.fit.core.model.wrapper.ScheduleNextStop
+import cz.vutbr.fit.core.model.wrapper.ScheduleLinkedStation
 import cz.vutbr.fit.core.model.wrapper.ScheduleRow
 import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
@@ -10,7 +10,7 @@ data class Schedule(
         var startStationId: Int = -1,
         var startStopId: Int = -1,
         var rows: ArrayList<ScheduleRow> = ArrayList(),
-        var nextStops: ArrayList<ScheduleNextStop> = ArrayList()) {
+        var linkedStations: ArrayList<ScheduleLinkedStation> = ArrayList()) {
 
     fun hasRows(): Boolean {
         return !rows.isEmpty()
@@ -20,13 +20,13 @@ data class Schedule(
         rows.add(row)
     }
 
-    fun hasNextStops(): Boolean {
-        return !nextStops.isEmpty()
+    fun hasLinkedStations(): Boolean {
+        return !linkedStations.isEmpty()
     }
 
-    fun addDifferentNextStop(stop: ScheduleNextStop) {
-        if (!nextStops.contains(stop)) {
-            nextStops.add(stop)
+    fun addDifferentNextStop(stop: ScheduleLinkedStation) {
+        if (!linkedStations.contains(stop)) {
+            linkedStations.add(stop)
         }
     }
 }

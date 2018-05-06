@@ -1,7 +1,7 @@
 package cz.vutbr.fit.core.io;
 
 import cz.vutbr.fit.core.model.Schedule;
-import cz.vutbr.fit.core.model.wrapper.ScheduleNextStop;
+import cz.vutbr.fit.core.model.wrapper.ScheduleLinkedStation;
 import cz.vutbr.fit.core.model.wrapper.ScheduleRow;
 import cz.vutbr.fit.core.model.wrapper.Service;
 
@@ -22,6 +22,7 @@ public class SchedulesParser {
         Map<Integer, Schedule> mappedSchedule = new HashMap<>();
 
         services.forEach(service -> {
+
             int hashOfService = Objects.hash(service.getStartStationId(), service.getStartStopId());
             Schedule schedule = mappedSchedule.getOrDefault(hashOfService, null);
 
@@ -44,8 +45,9 @@ public class SchedulesParser {
             schedule.addRow(scheduleRow);
 
             // create next stop entry and add it to schedule
-            ScheduleNextStop nextStop = new ScheduleNextStop();
+            ScheduleLinkedStation nextStop = new ScheduleLinkedStation();
             nextStop.setLineId(service.getLineId());
+            nextStop.setLineCode(service.getLineCode());
             nextStop.setStationId(service.getDestinationStationId());
             nextStop.setStopId(service.getDestinationStopId());
 

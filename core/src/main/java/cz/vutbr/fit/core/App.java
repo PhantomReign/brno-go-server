@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 @SpringBootApplication(scanBasePackages = "cz.vutbr.fit")
 @EnableReactiveMongoRepositories
 @EnableWebFluxSecurity
-@EnableCaching()
+@EnableCaching
 public class App {
 
     private static void setProxy() {

@@ -10,10 +10,6 @@ public interface Constant {
         String ADMIN = "ADMIN";
     }
 
-    interface Password {
-        int STRENGTH = 11;
-    }
-
     interface Charset {
         String DEFAULT = "Windows-1250";
     }
@@ -43,4 +39,20 @@ public interface Constant {
         int TIME_CORRECTION = 3000;
     }
 
+    interface Time {
+        int ONE_DAY_IN_SECONDS = 86400;
+    }
+
+    interface Estimation {
+        double AVG_SPEED_TRAM = 15.6;
+        double AVG_SPEED_BUS = 14;
+        double AVG_SPEED_TROLLEYBUS = 12.2;
+        double AVG_SPEED_WALK = 4.8;
+    }
+
+    interface VehicleType {
+        int BUS = 0;
+        int TRAM = 1;
+        int TROLLEY = 2;
+    }
 }

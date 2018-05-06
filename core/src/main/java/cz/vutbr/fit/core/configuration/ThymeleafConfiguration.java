@@ -23,7 +23,7 @@ public class ThymeleafConfiguration {
         final ThymeleafReactiveViewResolver viewResolver = new ThymeleafReactiveViewResolver();
         viewResolver.setTemplateEngine(templateEngine);
         viewResolver.setOrder(1);
-        viewResolver.setResponseMaxChunkSizeBytes(8192); // OUTPUT BUFFER size limit
+        viewResolver.setResponseMaxChunkSizeBytes(8192);
         return viewResolver;
     }
 

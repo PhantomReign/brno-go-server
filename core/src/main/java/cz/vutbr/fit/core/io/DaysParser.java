@@ -30,7 +30,7 @@ public class DaysParser {
         for (String line : fileContent) {
             try {
                 if (line.trim().startsWith(Constant.Parser.MARK_SCHEDULE_DATE)) {
-                    currentDayInSeconds = DateTime.zonedTimeToEpochSec(line, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    currentDayInSeconds = DateTime.zonedTimeToEpochSec(line);
                 } else {
                     int serviceCode = Integer.parseInt(line.trim());
                     ArrayList<Long> availableInDaysList = mappedSchedule.getOrDefault(serviceCode, new ArrayList<>());

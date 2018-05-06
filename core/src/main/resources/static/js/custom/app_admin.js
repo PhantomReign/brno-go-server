@@ -7,6 +7,8 @@ $(document).ready(function(){
     loadRepoFailedModal();
     loadRepoSuccessModal();
 
+    $('.progress').hide();
+
     $('.dropdown-button').dropdown({
             inDuration: 300,
             outDuration: 225,
@@ -15,6 +17,10 @@ $(document).ready(function(){
         }
     );
 });
+
+function onSubmit(){
+    $('#progress').fadeIn();
+}
 
 function loadRepoFailedModal() {
     $('#modalRepoFailed').modal('open');

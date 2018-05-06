@@ -1,57 +1,78 @@
 package cz.vutbr.fit.core.controller;
 
+import cz.vutbr.fit.core.graph.AStar;
 import cz.vutbr.fit.core.model.Route;
-import cz.vutbr.fit.live.model.Departure;
-import cz.vutbr.fit.live.service.DepartureService;
-import cz.vutbr.fit.live.service.VehicleService;
+import cz.vutbr.fit.core.model.Station;
+import cz.vutbr.fit.core.model.wrapper.RouteInfo;
+import cz.vutbr.fit.core.repository.cache.CachedStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import java.security.InvalidParameterException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/brnogo/api")
 public class RouteController {
 
-    final DepartureService departureService;
-    final VehicleService vehicleService;
+    private final CachedStationRepository stationRepository;
+    private final AStar aStar;
 
     @Autowired
-    public RouteController(DepartureService departureService, VehicleService vehicleService) {
-        this.departureService = departureService;
-        this.vehicleService = vehicleService;
+    public RouteController(CachedStationRepository stationRepository, AStar aStar) {
+        this.stationRepository = stationRepository;
+        this.aStar = aStar;
     }
-
-    /*
-
-    @RequestParam("sId") String startStationId,
-                                                    @RequestParam("dId") String destinationStationId,
-                                                    @RequestParam("uLat") String userLatitude,
-                                                    @RequestParam("uLon") String userLongitude,
-                                                    @RequestParam("dTime") String dateTime,
-                                                    @RequestParam("mTime") String minTimeToMove,
-                                                    @RequestParam("mTrans") String maxTransfers
-
-     */
 
     @RequestMapping("/routes")
-    public ArrayList<Route> getCorrespondingRoutes() {
+    public List<Route> getCorrespondingRoutes(@RequestParam("sId") int startStationId,
+                                              @RequestParam("dId") int destinationStationId,
+                                              @RequestParam("dTime") long dateTime,
+                                              @RequestParam("mTime") int minTimeToMove,
+                                              @RequestParam("mTrans") int maxTransfers,
+                                              @RequestParam("live") boolean liveDataEnabled,
+                                              @RequestParam("lim") int routeLimit) {
 
-        ArrayList<Route> routes = new ArrayList<>();
+        RouteInfo info = parseInformation(startStationId, destinationStationId, dateTime, minTimeToMove, maxTransfers, routeLimit, liveDataEnabled);
+        return aStar.findMultipleRoutes(info.getStartStation(), info.getDestinationStation(), info);
+    }
 
-        List<Departure> departureList = departureService.getDepartures(1567);
+    @RequestMapping("/directions")
+    public Route getDirectionRoutes(@RequestParam("sId") int startStationId,
+                                              @RequestParam("dId") int destinationStationId,
+                                              @RequestParam("dTime") long dateTime,
+                                              @RequestParam("mTime") int minTimeToMove,
+                                              @RequestParam("mTrans") int maxTransfers) {
 
-        for (Departure departure: departureList) {
-            System.out.println(departure.getLineName() + " "
-                    + departure.getPlatformId() + "/" + departure.getStopId()
-                    + " ----> " + departure.getFinalPlatformName());
+        RouteInfo info = parseInformation(startStationId, destinationStationId, dateTime, minTimeToMove, maxTransfers, 1, false);
+        return aStar.findSingleRoute(info.getStartStation(), info.getDestinationStation(), info, info.getDateTime());
+    }
 
+    private RouteInfo parseInformation(int startStationId, int destinationStationId, long dateTime, int minTimeToMove,
+                                       int maxTransfers, int routeLimit, boolean liveDataEnabled) {
+        RouteInfo parsedInfo = new RouteInfo();
+        try {
+            Station start = stationRepository.findById(startStationId);
+            Station end = stationRepository.findById(destinationStationId);
+
+            parsedInfo.setStartStation(start);
+            parsedInfo.setDestinationStation(end);
+            parsedInfo.setDateTime(dateTime + 20);
+            parsedInfo.setMinTimeToMove(minTimeToMove * 60);
+            parsedInfo.setMaxTransfers(maxTransfers);
+            parsedInfo.setRouteLimit(routeLimit);
+            parsedInfo.setLiveDataEnabled(liveDataEnabled);
+
+        } catch (NumberFormatException ex) {
+            throw new InvalidParameterException();
         }
 
-
-
-        return routes;
+        return parsedInfo;
     }
+
 }
