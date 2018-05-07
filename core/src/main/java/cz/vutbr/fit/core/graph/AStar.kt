@@ -38,8 +38,7 @@ constructor(private val scheduleRepository: CachedScheduleRepository,
         val routeList = ArrayList<Route>()
         for (i in 0 until config.routeLimit) {
             if (previous != null) {
-                val delay = previous.vehicles[0].delay
-                startTime = previous.vehicles[0].path[0].timeOfDeparture + 1 + delay.toLong()
+                startTime = previous.vehicles[0].path[0].timeOfDeparture + 60
             }
 
             val route = findSingleRoute(start, destination, config, startTime)
@@ -130,20 +129,17 @@ constructor(private val scheduleRepository: CachedScheduleRepository,
                     getCorrectScheduleRow(schedule, linkedStation, node, if (node.parent != null) config.minTimeToMove else 0)
                 }) ?: continue
 
-                if (scheduleRow.departureTime >= config.dateTime + Constant.Time.ONE_DAY_IN_SECONDS) {
+                if (scheduleRow.departureTime >= config.dateTime + Constant.Time.HALF_DAY_IN_SECONDS) {
                     continue
                 }
 
-                val waitTime: Int
+                var waitTime: Int = (scheduleRow.departureTime - node.timeOfArrival).toInt()
                 var nextLineDelay: Int? = 0
-                val currentLineDelay: Int
 
                 if (config.liveDataEnabled) {
+                    val currentLineDelay: Int = delayEvaluator.getLineDelay(node.lineCode, node.lineId)
                     nextLineDelay = delayEvaluator.getLineDelay(scheduleRow.lineCode, scheduleRow.lineId)
-                    currentLineDelay = delayEvaluator.getLineDelay(node.lineCode, node.lineId)
-                    waitTime = (scheduleRow.departureTime + nextLineDelay - (node.timeOfArrival + currentLineDelay)).toInt()
-                } else {
-                    waitTime = (scheduleRow.departureTime - node.timeOfArrival).toInt()
+                    waitTime += (nextLineDelay - currentLineDelay)
                 }
 
                 var transferPenalty = 0
@@ -350,7 +346,6 @@ constructor(private val scheduleRepository: CachedScheduleRepository,
     private fun getNearestPreviousScheduleRow(schedule: Schedule, linkedStation: ScheduleLinkedStation,
                                               currentNode: Node, minTimeToMove: Int): ScheduleRow? {
         var startTime = currentNode.timeOfArrival
-        val currentLineDelay = delayEvaluator.getLineDelay(currentNode.lineCode, currentNode.lineId).toLong()
 
         var nearestPreviousScheduleRow: ScheduleRow? = null
         while (startTime >= -1) {
@@ -365,6 +360,7 @@ constructor(private val scheduleRepository: CachedScheduleRepository,
                 }
             }
 
+            val currentLineDelay = delayEvaluator.getLineDelay(currentNode.lineCode, currentNode.lineId).toLong()
             val previousLineDelay = delayEvaluator.getLineDelay(previousScheduleRow.lineCode, previousScheduleRow.lineId).toLong()
             val arrivalTimeOfCurrent = currentNode.timeOfArrival + currentLineDelay
             val departureTimeOfPrevious = previousScheduleRow.departureTime + previousLineDelay

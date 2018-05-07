@@ -40,7 +40,7 @@ public interface Constant {
     }
 
     interface Time {
-        int ONE_DAY_IN_SECONDS = 86400;
+        int HALF_DAY_IN_SECONDS = 43200;
     }
 
     interface Estimation {
