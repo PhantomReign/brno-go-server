@@ -83,7 +83,7 @@ constructor(private val scheduleRepository: CachedScheduleRepository,
 
         if (start.hasStops()) {
             val (id) = start.stops[0]
-            mappedCost[start.id] = 0
+            mappedCost[Objects.hash(start.id)] = 0
             startNode.stopId = id
 
             queue.offer(startNode)
@@ -129,7 +129,8 @@ constructor(private val scheduleRepository: CachedScheduleRepository,
                     getCorrectScheduleRow(schedule, linkedStation, node, if (node.parent != null) config.minTimeToMove else 0)
                 }) ?: continue
 
-                if (scheduleRow.departureTime >= config.dateTime + Constant.Time.HALF_DAY_IN_SECONDS) {
+                if (scheduleRow.departureTime >= config.dateTime + Constant.Time.HALF_DAY_IN_SECONDS ||
+                        scheduleRow.departureTime < config.dateTime - Constant.Time.HALF_DAY_IN_SECONDS) {
                     continue
                 }
 
@@ -142,8 +143,8 @@ constructor(private val scheduleRepository: CachedScheduleRepository,
                     waitTime += (nextLineDelay - currentLineDelay)
                 }
 
-                var transferPenalty = 0
                 var isTransfer = false
+                var cost = node.cost + waitTime
 
                 if (node.lineId != scheduleRow.lineId && node.parent != null) {
                     isTransfer = true
@@ -155,14 +156,13 @@ constructor(private val scheduleRepository: CachedScheduleRepository,
                     }
 
                     if (node.transferCount < config.maxTransfers) {
-                        transferPenalty = config.minTimeToMove
+                        cost += config.minTimeToMove
                     } else {
                         continue
                     }
 
                 }
 
-                val cost = node.cost + waitTime + transferPenalty
                 val costToNext = costEvaluator.getCost(scheduleRow).toInt()
                 val transferCount = if (isTransfer) node.transferCount + 1 else node.transferCount
 
@@ -243,8 +243,7 @@ constructor(private val scheduleRepository: CachedScheduleRepository,
             nextNode.station = destPlatform
             nextNode.stationName = destPlatform!!.name
             nextNode.stationZone = destPlatform.zone
-            val estCost = heuristicEvaluator.getEstimation(nextNode, destinationNode).toInt()
-            nextNode.rating = cost + costToNext + estCost
+            nextNode.rating = cost + costToNext + heuristicEvaluator.getEstimation(nextNode, destinationNode).toInt()
             nextNode.transferCount = transferCount
             nextNode.lineDelay = nextLineDelay
             mappedCost[nextHash] = cost

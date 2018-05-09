@@ -163,6 +163,12 @@ public class ServicesParser {
                             // Vehicle can't move to next stop in instant.
                             long timeInSeconds = (nextService.getDepartureTime() - currentService.getDepartureTime() == 0) ?
                                     30 : nextService.getDepartureTime() - currentService.getDepartureTime();
+
+                            // next day time fix
+                            if (timeInSeconds < 0) {
+                                timeInSeconds += 86400;
+                            }
+
                             currentService.setTimeToNextStop(timeInSeconds);
                             currentService.setDestinationStationId(nextService.getStartStationId());
                             currentService.setDestinationStopId(nextService.getStartStopId());
