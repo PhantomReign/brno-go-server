@@ -38,7 +38,7 @@ constructor(private val scheduleRepository: CachedScheduleRepository,
         val routeList = ArrayList<Route>()
         for (i in 0 until config.routeLimit) {
             if (previous != null) {
-                startTime = previous.vehicles[0].path[0].timeOfDeparture + 60
+                startTime = previous.vehicles[0].path[0].timeOfDeparture + 1 + previous.vehicles[0].delay
             }
 
             val route = findSingleRoute(start, destination, config, startTime)
