@@ -12,16 +12,8 @@ data class Schedule(
         var rows: ArrayList<ScheduleRow> = ArrayList(),
         var linkedStations: ArrayList<ScheduleLinkedStation> = ArrayList()) {
 
-    fun hasRows(): Boolean {
-        return !rows.isEmpty()
-    }
-
     fun addRow(row: ScheduleRow) {
         rows.add(row)
-    }
-
-    fun hasLinkedStations(): Boolean {
-        return !linkedStations.isEmpty()
     }
 
     fun addDifferentNextStop(stop: ScheduleLinkedStation) {

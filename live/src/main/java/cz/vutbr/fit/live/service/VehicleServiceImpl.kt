@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service
 @CacheConfig(cacheNames = ["vehicles"])
 open class VehicleServiceImpl : VehicleService {
 
+    /**
+     * Get Live Vehicle data.
+     *
+     * @return list of vehicle objects
+     */
     @Cacheable(unless = "#result == null")
     override fun getVehicles(): List<Vehicle> {
 

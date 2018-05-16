@@ -20,6 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * Repository controller class. Contains methods used for database manipulation.
+ *
+ */
+
 @Controller
 @RequestMapping("/admin/repo")
 public class RepositoryController extends AbstractRepositoryController {

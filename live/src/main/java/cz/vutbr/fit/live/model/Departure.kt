@@ -13,7 +13,7 @@ data class Departure(
         return if (numberOfDigits > 2) {
             timeMark.substring(0, 2) + ":" + timeMark.substring(2, 4)
         } else {
-            timeMark + " min"
+            "$timeMark min"
         }
     }
 }

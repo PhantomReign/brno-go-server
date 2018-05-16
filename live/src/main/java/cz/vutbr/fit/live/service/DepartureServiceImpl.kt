@@ -10,6 +10,12 @@ import org.springframework.stereotype.Service
 @CacheConfig(cacheNames = ["departures"])
 open class DepartureServiceImpl : DepartureService {
 
+    /**
+     * Get Live Departure data.
+     *
+     * @param stationId id of station
+     * @return list of departure objects
+     */
     @Cacheable(unless = "#result == null")
     override fun getDepartures(stationId: Int): List<Departure> {
 
@@ -24,6 +30,12 @@ open class DepartureServiceImpl : DepartureService {
         return departures
     }
 
+    /**
+     * Get formatted time mark.
+     *
+     * @param timeMark time mark
+     * @return formatted time mark
+     */
     private fun getNumberTimeMark(timeMark: String): String {
         val number = timeMark.replace("[\\D]".toRegex(), "")
         return if (number.isNotBlank()) {

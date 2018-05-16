@@ -11,6 +11,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
+/**
+ * Security configuration class. Class secures admin section.
+ *
+ */
+
 @Configuration
 public class SecurityConfiguration {
     @Bean

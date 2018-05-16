@@ -769,7 +769,7 @@
 01242 100 'Klusáčkova' 'Klusáčkova' 'Klusáčkova' 'Klusáčkova' 'Klusáčkova'
   S01 +099555996 +295274190 S 000 '>Kr.Pole,Žab.'
   S02 +099557250 +295271418 S 000 '>město'
-  S51 +099547333 +295278523 S 000 'V>Kr.Pole,Žab.'
+  S51 +099542443 +295265385 S 000 'V>Kr.Pole,Žab.'
   S52 +099549265 +295278545 S 000 'V>město'
   S54 +099557730 +295264541 S 000 'V>Tábor'
 01246 101 'Kociánka' 'Kociánka' 'Kociánka' 'Kociánka' 'Kociánka'

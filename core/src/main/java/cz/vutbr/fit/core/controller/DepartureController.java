@@ -17,6 +17,11 @@ import reactor.core.publisher.Mono;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Departure controller class. Contains methods used for getting departure data.
+ *
+ */
+
 @RestController
 @RequestMapping("/brnogo/api")
 public class DepartureController {

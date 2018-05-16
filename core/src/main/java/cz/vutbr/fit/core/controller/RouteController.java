@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.InvalidParameterException;
 import java.util.List;
 
+/**
+ * Route controller class. Contains methods used for getting route data.
+ *
+ */
+
 @RestController
 @RequestMapping("/brnogo/api")
 public class RouteController {

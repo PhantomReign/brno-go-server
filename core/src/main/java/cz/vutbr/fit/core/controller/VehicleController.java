@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Vehicle controller class. Contains method used for getting vehicle data.
+ *
+ */
+
 @RestController
 @RequestMapping("/brnogo/api")
 public class VehicleController {

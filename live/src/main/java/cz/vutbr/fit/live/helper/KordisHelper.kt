@@ -7,6 +7,12 @@ internal object KordisHelper {
 
     private var kordisService: KORDISService? = null
 
+    /**
+     * Get Kordis Service.
+     *
+     * @return Kordis Service
+     */
+
     @Synchronized
     @Throws(ExecutionException::class)
     fun getService(): KORDISService {

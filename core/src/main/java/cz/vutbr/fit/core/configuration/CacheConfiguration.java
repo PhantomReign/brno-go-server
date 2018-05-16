@@ -14,6 +14,11 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * Cache configuration class. This class takes information from application.properties file and creates caches.
+ *
+ */
+
 @Configuration
 @ConfigurationProperties(prefix = "caching")
 public class CacheConfiguration {

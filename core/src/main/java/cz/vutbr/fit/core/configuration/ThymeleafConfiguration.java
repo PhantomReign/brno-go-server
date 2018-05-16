@@ -8,6 +8,11 @@ import org.springframework.web.reactive.config.EnableWebFlux;
 import org.thymeleaf.spring5.ISpringWebFluxTemplateEngine;
 import org.thymeleaf.spring5.view.reactive.ThymeleafReactiveViewResolver;
 
+/**
+ * Thymeleaf configuration class. This class configures thymeleaf framework used in admin section.
+ *
+ */
+
 @Configuration
 @EnableConfigurationProperties(ThymeleafProperties.class)
 public class ThymeleafConfiguration {

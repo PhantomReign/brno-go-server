@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
+/**
+ * Station controller class. Contains method used for getting stations.
+ *
+ */
+
 @RestController
 @RequestMapping("/brnogo/api")
 public class StationController {
