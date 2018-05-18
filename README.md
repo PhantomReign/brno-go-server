@@ -43,8 +43,10 @@ Example: `ssh -D 9001 login@pcuifs2.fit.vutbr.cz`
 
 6. Access `domain_name/admin` endpoint and add necessary files. Don't forget to join content of day files to one file.
 
+7. Update database information (stations first).
+
 
 For accessing server outside localhost is recommended to use `https://localtunnel.github.io/www/`.
 Example of use: `lt --port 8080 --subdomain brnogoserver`. Note: If different subdomain is generated, it means
-the domain is taken. 
+the subdomain is taken. 
 

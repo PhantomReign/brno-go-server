@@ -1,19 +1,21 @@
 package cz.vutbr.fit.core.graph
 
+import cz.vutbr.fit.core.graph.helper.RouteHelper
 import cz.vutbr.fit.core.graph.service.CostEvaluator
 import cz.vutbr.fit.core.graph.service.DelayEvaluator
 import cz.vutbr.fit.core.graph.service.HeuristicEvaluator
-import cz.vutbr.fit.core.graph.helper.RouteHelper
 import cz.vutbr.fit.core.model.Route
 import cz.vutbr.fit.core.model.Schedule
 import cz.vutbr.fit.core.model.Station
-import cz.vutbr.fit.core.model.wrapper.*
+import cz.vutbr.fit.core.model.wrapper.Node
+import cz.vutbr.fit.core.model.wrapper.RouteInfo
+import cz.vutbr.fit.core.model.wrapper.ScheduleLinkedStation
+import cz.vutbr.fit.core.model.wrapper.ScheduleRow
 import cz.vutbr.fit.core.repository.cache.CachedScheduleRepository
 import cz.vutbr.fit.core.repository.cache.CachedStationRepository
 import cz.vutbr.fit.core.tools.Constant
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-
 import java.util.*
 
 @Service
@@ -148,7 +150,10 @@ constructor(private val scheduleRepository: CachedScheduleRepository,
 
                 if (node.lineId != scheduleRow.lineId && node.parent != null) {
                     isTransfer = true
-                    val parentDelay = delayEvaluator.getLineDelay(node.parent!!.lineCode, node.parent!!.lineId).toLong()
+                    var parentDelay: Long = 0
+                    if (config.liveDataEnabled) {
+                        parentDelay = delayEvaluator.getLineDelay(node.parent!!.lineCode, node.parent!!.lineId).toLong()
+                    }
                     val timeForTransfer = (scheduleRow.departureTime + nextLineDelay!! - (node.parent!!.timeOfArrival + parentDelay)).toInt()
 
                     if (timeForTransfer < config.minTimeToMove) {
