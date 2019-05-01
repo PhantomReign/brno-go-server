@@ -2,6 +2,7 @@
 > **Not maintained, for study purposes only.**
 
 Implementation of server for mobile application. It contains all source files in two modules.
+Created as a part of [Master's Thesis](https://www.vutbr.cz/www_base/zav_prace_soubor_verejne.php?file_id=181410) at FIT BUT - understanding of Slovak language is required.
 
 ### Core module
 
